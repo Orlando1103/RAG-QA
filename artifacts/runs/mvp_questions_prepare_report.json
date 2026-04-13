@@ -1,0 +1,12 @@
+{
+  "source": "sample",
+  "split": "validation",
+  "subset_size": 4,
+  "output_path": "D:\\ACode\\python\\USTLLM\\Cursor_RAG\\LEARN-RAG-QA\\data\\processed\\mvp_questions.jsonl",
+  "question_ids": [
+    "q1",
+    "q2",
+    "q3",
+    "q4"
+  ]
+}

@@ -1,0 +1,30 @@
+project_name: learn-rag-qa
+seed: 42
+
+paths:
+  data_dir: data
+  artifacts_dir: artifacts
+  cache_dir: data/cache
+  prepared_questions_path: data/processed/questions.jsonl
+  corpus_path: data/sample/passages.jsonl
+  dense_index_path: artifacts/dense_index.npz
+  dense_meta_path: artifacts/dense_meta.jsonl
+  runs_dir: artifacts/runs
+
+dataset:
+  source: sample
+  split: validation
+  subset_size: 8
+  seed: 42
+  output_path: data/processed/questions.jsonl
+
+generation:
+  model_name:
+  model_name_env: MODELSCOPE_MODEL
+
+provider:
+  kind: openai_compatible
+  base_url: https://api-inference.modelscope.cn/v1
+  base_url_env: MODELSCOPE_BASE_URL
+  api_key_env: MODELSCOPE_API_KEY
+  timeout_seconds: 60

@@ -1,0 +1,92 @@
+Metadata-Version: 2.4
+Name: learn-rag-qa
+Version: 0.1.0
+Summary: Step-by-step reconstruction of a RAG QA project.
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: PyYAML>=6.0
+Requires-Dist: datasets
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+
+# LEARN-RAG-QA (Phase 1-2)
+
+This repository reconstructs the original RAG-QA project from zero in explicit phases.
+## Why Phase 1 exists
+
+Before retrieval and generation logic, we need a stable foundation:
+
+1. Project layout
+2. Config files (`base.yaml` + `mvp.yaml`)
+3. `.env` based runtime override
+4. A minimal CLI command to validate config loading
+
+No retrieval or LLM calling is implemented in Phase 1.
+
+## Why Phase 2 exists
+
+Phase 2 adds only data preparation. It keeps the project progression logical:
+
+1. Load sample questions from local JSONL
+2. Optionally download and sample `nq_open`
+3. Save normalized questions to `data/processed/*.jsonl`
+4. Emit a preparation report for traceability
+
+## Directory layout (Phase 1-2)
+
+- `configs/`: base and MVP config files
+- `src/rag_qa/`: package source
+- `tests/`: config and data-prepare tests
+- `data/`: sample data and processed outputs
+- `artifacts/`: reserved for generated outputs
+
+## Setup
+
+```bash
+pip install -e .[dev]
+```
+
+Create `.env` in repository root:
+
+```bash
+MODELSCOPE_API_KEY=replace-with-your-modelscope-key
+MODELSCOPE_BASE_URL=https://api-inference.modelscope.cn/v1
+MODELSCOPE_MODEL=Qwen/Qwen3-8B
+```
+
+## Phase 1 verification
+
+Run:
+
+```bash
+python -m rag_qa.cli.config_check --config configs/mvp.yaml
+```
+
+Expected output includes:
+
+- `Config loaded successfully.`
+- `generation.model_name=<value from .env>`
+- `provider.base_url=<value from .env>`
+
+If `.env` is missing `MODELSCOPE_MODEL`, the command should fail with a clear error.
+
+## Phase 2 verification
+
+Run data preparation:
+
+```bash
+python -m rag_qa.cli.prepare --config configs/mvp.yaml --force-refresh
+```
+
+Expected output:
+
+- `Prepared 4 questions at .../data/processed/mvp_questions.jsonl`
+- `Preparation report written to .../artifacts/runs/mvp_questions_prepare_report.json`
+
+Then run tests:
+
+```bash
+python -m pytest tests/test_config.py tests/test_prepare.py -q
+```
+
+You should see all tests passing.

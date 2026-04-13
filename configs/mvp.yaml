@@ -1,0 +1,11 @@
+dataset:
+  source: sample
+  subset_size: 8
+  split: validation
+  output_path: data/processed/mvp_questions.jsonl
+
+paths:
+  prepared_questions_path: data/processed/mvp_questions.jsonl
+  corpus_path: data/sample/passages.jsonl
+  dense_index_path: artifacts/mvp_dense_index.npz
+  dense_meta_path: artifacts/mvp_dense_meta.jsonl
