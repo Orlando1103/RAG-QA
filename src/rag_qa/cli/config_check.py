@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 
-from rag_qa.config import load_config
+from src.rag_qa.config import load_config
 
 
 def parse_args() -> argparse.Namespace:

@@ -1,2 +1,1 @@
 """CLI entrypoints for learn-rag-qa."""
-
