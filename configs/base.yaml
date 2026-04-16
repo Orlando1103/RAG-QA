@@ -18,6 +18,15 @@ dataset:
   seed: 42
   output_path: data/processed/questions.jsonl
 
+retrieval:
+  initial_top_k: 8
+  second_pass_top_k: 16
+
+sparse:
+  enabled: true
+  k1: 1.5
+  b: 0.75
+
 generation:
   model_name:
   model_name_env: MODELSCOPE_MODEL

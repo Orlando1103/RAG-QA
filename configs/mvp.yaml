@@ -9,3 +9,7 @@ paths:
   corpus_path: data/sample/passages.jsonl
   dense_index_path: artifacts/mvp_dense_index.npz
   dense_meta_path: artifacts/mvp_dense_meta.jsonl
+
+retrieval:
+  initial_top_k: 4
+  second_pass_top_k: 8

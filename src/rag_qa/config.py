@@ -7,7 +7,7 @@ from typing import Any
 
 import yaml
 
-from src.rag_qa.utils.env import load_env_file
+from rag_qa.utils.env import load_env_file
 
 
 @dataclass(slots=True)
@@ -32,6 +32,19 @@ class DatasetConfig:
 
 
 @dataclass(slots=True)
+class RetrievalConfig:
+    initial_top_k: int
+    second_pass_top_k: int
+
+
+@dataclass(slots=True)
+class SparseConfig:
+    enabled: bool
+    k1: float
+    b: float
+
+
+@dataclass(slots=True)
 class GenerationConfig:
     model_name: str | None
     model_name_env: str
@@ -52,6 +65,8 @@ class AppConfig:
     seed: int
     paths: PathsConfig
     dataset: DatasetConfig
+    retrieval: RetrievalConfig
+    sparse: SparseConfig
     generation: GenerationConfig
     provider: ProviderConfig
     project_root: Path
@@ -147,6 +162,8 @@ def load_config(config_path: str | Path) -> AppConfig:
         seed=config_data["seed"],
         paths=PathsConfig(**config_data["paths"]),
         dataset=DatasetConfig(**config_data["dataset"]),
+        retrieval=RetrievalConfig(**config_data["retrieval"]),
+        sparse=SparseConfig(**config_data["sparse"]),
         generation=GenerationConfig(**config_data["generation"]),
         provider=ProviderConfig(**config_data["provider"]),
         project_root=project_root,

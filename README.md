@@ -1,4 +1,4 @@
-# LEARN-RAG-QA (Phase 1-2)
+# LEARN-RAG-QA (Phase 1-3)
 
 This repository reconstructs the original RAG-QA project from zero in explicit phases.
 ## Why Phase 1 exists
@@ -21,11 +21,20 @@ Phase 2 adds only data preparation. It keeps the project progression logical:
 3. Save normalized questions to `data/processed/*.jsonl`
 4. Emit a preparation report for traceability
 
-## Directory layout (Phase 1-2)
+## Why Phase 3 exists
+
+Phase 3 introduces sparse retrieval (BM25) as the first retriever:
+
+1. Load passages from local corpus
+2. Tokenize query/document text
+3. Rank passages with BM25
+4. Return top-k scored results
+
+## Directory layout (Phase 1-3)
 
 - `configs/`: base and MVP config files
 - `src/rag_qa/`: package source
-- `tests/`: config and data-prepare tests
+- `tests/`: config, data-prepare, and sparse-retrieval tests
 - `data/`: sample data and processed outputs
 - `artifacts/`: reserved for generated outputs
 
@@ -76,6 +85,27 @@ Then run tests:
 
 ```bash
 python -m pytest tests/test_config.py tests/test_prepare.py -q
+```
+
+You should see all tests passing.
+
+## Phase 3 verification
+
+Run sparse retrieval:
+
+```bash
+python -m rag_qa.cli.sparse_retrieve --config configs/mvp.yaml --question "Who wrote Pride and Prejudice?" --top-k 3
+```
+
+Expected behavior:
+
+- Returns ranked passages in JSON
+- Contains the relevant passage (`p1`) in top-k
+
+Then run tests:
+
+```bash
+python -m pytest tests/test_config.py tests/test_prepare.py tests/test_sparse.py -q
 ```
 
 You should see all tests passing.
