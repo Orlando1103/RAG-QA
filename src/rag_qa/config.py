@@ -45,6 +45,14 @@ class SparseConfig:
 
 
 @dataclass(slots=True)
+class DenseConfig:
+    enabled: bool
+    model_name: str
+    batch_size: int
+    normalize: bool
+
+
+@dataclass(slots=True)
 class GenerationConfig:
     model_name: str | None
     model_name_env: str
@@ -67,6 +75,7 @@ class AppConfig:
     dataset: DatasetConfig
     retrieval: RetrievalConfig
     sparse: SparseConfig
+    dense: DenseConfig
     generation: GenerationConfig
     provider: ProviderConfig
     project_root: Path
@@ -164,6 +173,7 @@ def load_config(config_path: str | Path) -> AppConfig:
         dataset=DatasetConfig(**config_data["dataset"]),
         retrieval=RetrievalConfig(**config_data["retrieval"]),
         sparse=SparseConfig(**config_data["sparse"]),
+        dense=DenseConfig(**config_data["dense"]),
         generation=GenerationConfig(**config_data["generation"]),
         provider=ProviderConfig(**config_data["provider"]),
         project_root=project_root,

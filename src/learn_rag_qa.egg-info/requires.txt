@@ -1,5 +1,6 @@
 PyYAML>=6.0
 datasets
+numpy
 
 [dev]
 pytest>=8.0

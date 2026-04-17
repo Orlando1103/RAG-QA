@@ -1,4 +1,4 @@
-# LEARN-RAG-QA (Phase 1-3)
+# LEARN-RAG-QA (Phase 1-4)
 
 This repository reconstructs the original RAG-QA project from zero in explicit phases.
 ## Why Phase 1 exists
@@ -30,11 +30,20 @@ Phase 3 introduces sparse retrieval (BM25) as the first retriever:
 3. Rank passages with BM25
 4. Return top-k scored results
 
-## Directory layout (Phase 1-3)
+## Why Phase 4 exists
+
+Phase 4 adds dense retrieval with vector indexing:
+
+1. Encode passages into dense vectors
+2. Persist vectors (`.npz`) and metadata (`.jsonl`)
+3. Load index back for retrieval
+4. Support a hashing embedder fallback for fast MVP runs
+
+## Directory layout (Phase 1-4)
 
 - `configs/`: base and MVP config files
 - `src/rag_qa/`: package source
-- `tests/`: config, data-prepare, and sparse-retrieval tests
+- `tests/`: config, data-prepare, sparse, and dense tests
 - `data/`: sample data and processed outputs
 - `artifacts/`: reserved for generated outputs
 
@@ -106,6 +115,27 @@ Then run tests:
 
 ```bash
 python -m pytest tests/test_config.py tests/test_prepare.py tests/test_sparse.py -q
+```
+
+You should see all tests passing.
+
+## Phase 4 verification
+
+Build dense index (MVP-fast mode):
+
+```bash
+python -m rag_qa.cli.index --config configs/mvp.yaml --use-hashing-embedder
+```
+
+Expected output:
+
+- `Dense index written to .../artifacts/mvp_dense_index.npz`
+- `Dense metadata written to .../artifacts/mvp_dense_meta.jsonl`
+
+Then run tests:
+
+```bash
+python -m pytest tests/test_config.py tests/test_prepare.py tests/test_sparse.py tests/test_dense.py -q
 ```
 
 You should see all tests passing.

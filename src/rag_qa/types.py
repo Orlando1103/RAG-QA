@@ -26,3 +26,4 @@ class RetrievedPassage:
     rank: int
     component_scores: dict[str, float]
 
+

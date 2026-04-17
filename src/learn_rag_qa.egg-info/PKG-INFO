@@ -6,10 +6,11 @@ Requires-Python: >=3.11
 Description-Content-Type: text/markdown
 Requires-Dist: PyYAML>=6.0
 Requires-Dist: datasets
+Requires-Dist: numpy
 Provides-Extra: dev
 Requires-Dist: pytest>=8.0; extra == "dev"
 
-# LEARN-RAG-QA (Phase 1-2)
+# LEARN-RAG-QA (Phase 1-4)
 
 This repository reconstructs the original RAG-QA project from zero in explicit phases.
 ## Why Phase 1 exists
@@ -32,11 +33,29 @@ Phase 2 adds only data preparation. It keeps the project progression logical:
 3. Save normalized questions to `data/processed/*.jsonl`
 4. Emit a preparation report for traceability
 
-## Directory layout (Phase 1-2)
+## Why Phase 3 exists
+
+Phase 3 introduces sparse retrieval (BM25) as the first retriever:
+
+1. Load passages from local corpus
+2. Tokenize query/document text
+3. Rank passages with BM25
+4. Return top-k scored results
+
+## Why Phase 4 exists
+
+Phase 4 adds dense retrieval with vector indexing:
+
+1. Encode passages into dense vectors
+2. Persist vectors (`.npz`) and metadata (`.jsonl`)
+3. Load index back for retrieval
+4. Support a hashing embedder fallback for fast MVP runs
+
+## Directory layout (Phase 1-4)
 
 - `configs/`: base and MVP config files
 - `src/rag_qa/`: package source
-- `tests/`: config and data-prepare tests
+- `tests/`: config, data-prepare, sparse, and dense tests
 - `data/`: sample data and processed outputs
 - `artifacts/`: reserved for generated outputs
 
@@ -87,6 +106,48 @@ Then run tests:
 
 ```bash
 python -m pytest tests/test_config.py tests/test_prepare.py -q
+```
+
+You should see all tests passing.
+
+## Phase 3 verification
+
+Run sparse retrieval:
+
+```bash
+python -m rag_qa.cli.sparse_retrieve --config configs/mvp.yaml --question "Who wrote Pride and Prejudice?" --top-k 3
+```
+
+Expected behavior:
+
+- Returns ranked passages in JSON
+- Contains the relevant passage (`p1`) in top-k
+
+Then run tests:
+
+```bash
+python -m pytest tests/test_config.py tests/test_prepare.py tests/test_sparse.py -q
+```
+
+You should see all tests passing.
+
+## Phase 4 verification
+
+Build dense index (MVP-fast mode):
+
+```bash
+python -m rag_qa.cli.index --config configs/mvp.yaml --use-hashing-embedder
+```
+
+Expected output:
+
+- `Dense index written to .../artifacts/mvp_dense_index.npz`
+- `Dense metadata written to .../artifacts/mvp_dense_meta.jsonl`
+
+Then run tests:
+
+```bash
+python -m pytest tests/test_config.py tests/test_prepare.py tests/test_sparse.py tests/test_dense.py -q
 ```
 
 You should see all tests passing.
